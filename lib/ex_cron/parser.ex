@@ -36,7 +36,17 @@ defmodule ExCron.Parser do
   defp map_piece(value, _valid_values) do
     pieces = String.split value, ","
     pieces
-      |> Enum.map(&String.to_integer/1)
+      |> Enum.map(&parse_piece_value/1)
+      |> List.flatten
       |> Enum.sort
+  end
+
+  defp parse_piece_value(value) do
+    pieces = String.split value, "-"
+    {min, max} = pieces
+      |> Enum.map(&String.to_integer/1)
+      |> Enum.min_max
+    min..max
+      |> Enum.to_list
   end
 end

@@ -20,4 +20,8 @@ defmodule ExCron.ParserTest do
   test "parse minutes with fractional wildcard" do
     assert %Cron{minutes: [0,20,40]} = ExCron.Parser.parse "*/20 * * * *"
   end
+
+  test "parse minute range" do
+    assert %Cron{minutes: [10,11,12]} = ExCron.Parser.parse "10-12 * * * *"
+  end
 end
