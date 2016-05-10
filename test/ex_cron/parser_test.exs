@@ -14,7 +14,7 @@ defmodule ExCron.ParserTest do
 
   test "parse minute wildcard" do
     minutes = 0..59 |> Enum.to_list
-    assert %Cron{minutes: minutes} = ExCron.Parser.parse "* * * * *"
+    assert %Cron{minutes: ^minutes} = ExCron.Parser.parse "* * * * *"
   end
 
   test "parse minutes with fractional wildcard" do
@@ -23,5 +23,9 @@ defmodule ExCron.ParserTest do
 
   test "parse minute range" do
     assert %Cron{minutes: [10,11,12]} = ExCron.Parser.parse "10-12 * * * *"
+  end
+
+  test "parse multiple minute ranges" do
+    assert %Cron{minutes: [6,10,11,12,15,16]} = ExCron.Parser.parse "10-12,6,15-16 * * * *"
   end
 end
