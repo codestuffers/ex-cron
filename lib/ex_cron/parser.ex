@@ -43,10 +43,10 @@ defmodule ExCron.Parser do
 
   defp parse_piece_value(value) do
     pieces = String.split value, "-"
-    {min, max} = pieces
+    {min_value, max_value} = pieces
       |> Enum.map(&String.to_integer/1)
       |> Enum.min_max
-    min..max
+    min_value..max_value
       |> Enum.to_list
   end
 end

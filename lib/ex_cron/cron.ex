@@ -1,4 +1,8 @@
 defmodule ExCron.Cron do
+  @moduledoc """
+  Struct that holds the pieces of a parsed cron string
+  """
+  
   defstruct [
     minutes: [],
     hours: [],
