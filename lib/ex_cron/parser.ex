@@ -26,6 +26,12 @@ defmodule ExCron.Parser do
     }
   end
 
+  defp map_piece("*/" <> fractional, valid_values) do
+    fractional_value = String.to_integer fractional
+    valid_values
+      |> Enum.filter(&(0 == rem(&1, fractional_value)))
+      |> Enum.to_list
+  end
   defp map_piece("*", valid_values), do: valid_values |> Enum.to_list
   defp map_piece(value, _valid_values) do
     pieces = String.split value, ","
