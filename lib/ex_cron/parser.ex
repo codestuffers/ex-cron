@@ -53,7 +53,8 @@ defmodule ExCron.Parser do
 
   defp get_name_mapper(lookup) do
     fn x ->
-      case Enum.find_index(lookup, &(&1 == x)) do
+      upcase_x = String.upcase x
+      case Enum.find_index(lookup, &(&1 == upcase_x)) do
         nil -> String.to_integer(x)
         val -> val
       end

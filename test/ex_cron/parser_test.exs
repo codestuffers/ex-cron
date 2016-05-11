@@ -111,6 +111,7 @@ defmodule ExCron.ParserTest do
   test "parse single day of week" do
     assert %Cron{days_of_week: [4]} = ExCron.Parser.parse "* * * * 4"
     assert %Cron{days_of_week: [4]} = ExCron.Parser.parse "* * * * THU"
+    assert %Cron{days_of_week: [4]} = ExCron.Parser.parse "* * * * thu"
   end
 
   test "parse multiple days of week" do
