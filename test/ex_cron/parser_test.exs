@@ -106,4 +106,30 @@ defmodule ExCron.ParserTest do
   test "parse multiple month ranges" do
     assert %Cron{months: [3,4,6,10,11,12]} = ExCron.Parser.parse "* * * 10-12,6,3-4 *"
   end
+
+  ### Day of week tests
+  test "parse single day of week" do
+    assert %Cron{days_of_week: [4]} = ExCron.Parser.parse "* * * * 4"
+  end
+
+  test "parse multiple days of week" do
+    assert %Cron{days_of_week: [3, 6]} = ExCron.Parser.parse "* * * * 6,3"
+  end
+
+  test "parse day of week wildcard" do
+    days_of_week = 0..6 |> Enum.to_list
+    assert %Cron{days_of_week: ^days_of_week} = ExCron.Parser.parse "* * * * *"
+  end
+
+  test "parse days of week with fractional wildcard" do
+    assert %Cron{days_of_week: [0,3,6]} = ExCron.Parser.parse "* * * * */3"
+  end
+
+  test "parse day of week range" do
+    assert %Cron{days_of_week: [1, 2, 3]} = ExCron.Parser.parse "* * * * 1-3"
+  end
+
+  test "parse multiple day of week ranges" do
+    assert %Cron{days_of_week: [0, 2, 3, 4, 5, 6]} = ExCron.Parser.parse "* * 10-12,6,15-16 * 4-6,0,2-3"
+  end
 end
