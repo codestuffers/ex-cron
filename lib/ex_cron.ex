@@ -15,6 +15,9 @@ defmodule ExCron do
       iex> ExCron.next "* * * * *", {{2016, 5, 10},{22, 13, 13}}
       {{2016, 5, 10}, {22, 14, 0}}
 
+      iex> ExCron.next "5 20 * DEC MON-WED", {{2016, 5, 10},{22, 13, 13}}
+      {{2016, 12, 5}, {20, 5, 0}}
+
   """
   def next(cron_string, start = {{_,_,_},{_,_,_}}) do
     cron = Parser.parse cron_string
@@ -39,9 +42,17 @@ defmodule ExCron do
     end
   end
 
-  defp is_match(cron = %Cron{}, {{_, month, day},{hour, minute, _}}) do
-    cron.minutes
-      |> Enum.any?(&(&1 == minute))
+  defp is_match(cron = %Cron{}, {{year, month, day},{hour, minute, _}}) do
+    day_of_week = :calendar.day_of_the_week(year, month, day)
+
+    matches = [
+      cron.minutes |> Enum.any?(&(&1 == minute)),
+      cron.hours |> Enum.any?(&(&1 == hour)),
+      cron.days_of_month |> Enum.any?(&(&1 == day)),
+      cron.months |> Enum.any?(&(&1 == month)),
+      cron.days_of_week |> Enum.any?(&(&1 == day_of_week))
+    ]
+    matches |> Enum.all?
   end
 
   @doc ~S"""
