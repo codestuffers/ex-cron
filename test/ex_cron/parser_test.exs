@@ -84,10 +84,12 @@ defmodule ExCron.ParserTest do
   ### Month tests
   test "parse single month" do
     assert %Cron{months: [7]} = ExCron.Parser.parse "* * * 7 *"
+    assert %Cron{months: [7]} = ExCron.Parser.parse "* * * jul *"
   end
 
   test "parse multiple months" do
     assert %Cron{months: [6, 12]} = ExCron.Parser.parse "* * * 12,6 *"
+    assert %Cron{months: [6, 12]} = ExCron.Parser.parse "* * * DEC,JUN *"
   end
 
   test "parse month wildcard" do
@@ -101,10 +103,12 @@ defmodule ExCron.ParserTest do
 
   test "parse month range" do
     assert %Cron{months: [10,11,12]} = ExCron.Parser.parse "* * * 10-12 *"
+    assert %Cron{months: [10,11,12]} = ExCron.Parser.parse "* * * OCT-dec *"
   end
 
   test "parse multiple month ranges" do
     assert %Cron{months: [3,4,6,10,11,12]} = ExCron.Parser.parse "* * * 10-12,6,3-4 *"
+    assert %Cron{months: [3,4,6,10,11,12]} = ExCron.Parser.parse "* * * oct-dec,jun,MAR-APR *"
   end
 
   ### Day of week tests

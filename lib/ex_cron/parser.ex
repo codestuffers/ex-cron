@@ -21,7 +21,7 @@ defmodule ExCron.Parser do
       minutes: minutes |> parse_piece(0..59),
       hours: hours |> parse_piece(0..23),
       days_of_month: days_of_month |> parse_piece(1..31),
-      months: months |> parse_piece(1..12),
+      months: months |> parse_piece(1..12, get_name_mapper(~w(JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC), 1)),
       days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(~w(SUN MON TUE WED THU FRI SAT)))
     }
   end
@@ -51,12 +51,12 @@ defmodule ExCron.Parser do
       |> Enum.to_list
   end
 
-  defp get_name_mapper(lookup) do
+  defp get_name_mapper(lookup, offset \\ 0) do
     fn x ->
       upcase_x = String.upcase x
       case Enum.find_index(lookup, &(&1 == upcase_x)) do
         nil -> String.to_integer(x)
-        val -> val
+        val -> val + offset
       end
     end
   end
