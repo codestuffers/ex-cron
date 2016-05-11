@@ -110,10 +110,12 @@ defmodule ExCron.ParserTest do
   ### Day of week tests
   test "parse single day of week" do
     assert %Cron{days_of_week: [4]} = ExCron.Parser.parse "* * * * 4"
+    assert %Cron{days_of_week: [4]} = ExCron.Parser.parse "* * * * THU"
   end
 
   test "parse multiple days of week" do
     assert %Cron{days_of_week: [3, 6]} = ExCron.Parser.parse "* * * * 6,3"
+    assert %Cron{days_of_week: [3, 6]} = ExCron.Parser.parse "* * * * SAT,WED"
   end
 
   test "parse day of week wildcard" do
@@ -127,9 +129,11 @@ defmodule ExCron.ParserTest do
 
   test "parse day of week range" do
     assert %Cron{days_of_week: [1, 2, 3]} = ExCron.Parser.parse "* * * * 1-3"
+    assert %Cron{days_of_week: [1, 2, 3]} = ExCron.Parser.parse "* * * * MON-WED"
   end
 
   test "parse multiple day of week ranges" do
-    assert %Cron{days_of_week: [0, 2, 3, 4, 5, 6]} = ExCron.Parser.parse "* * 10-12,6,15-16 * 4-6,0,2-3"
+    assert %Cron{days_of_week: [0, 2, 3, 4, 5, 6]} = ExCron.Parser.parse "* * * * 4-6,0,2-3"
+    assert %Cron{days_of_week: [0, 2, 3, 4, 5, 6]} = ExCron.Parser.parse "* * * * THU-SAT,SUN,TUE-WED"
   end
 end
