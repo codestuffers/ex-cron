@@ -1,13 +1,26 @@
 defmodule ExCron.Mixfile do
   use Mix.Project
 
+  @version "0.0.1"
+
   def project do
-    [app: :ex_cron,
-     version: "0.0.1",
-     elixir: "~> 1.2",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps]
+    [
+      app: :ex_cron,
+      version: @version,
+      elixir: "~> 1.2",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps,
+      description: "Cron schedule generator for Elixir.",
+      docs: [
+        main: "ExCrom",
+        source_ref: "v#{@version}",
+        source_url: "https://github.com/codestuffers/ex-cron"
+      ],
+      elixir: ">= 1.2.0",
+      name: "ExCron",
+      package: package,
+    ]
   end
 
   # Configuration for the OTP application
@@ -28,7 +41,22 @@ defmodule ExCron.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:credo, "~> 0.3", only: [:dev, :test]}
+      {:credo,       "~> 0.3",  only: [:dev, :test]},
+      {:earmark,     "~> 0.2",  only: [:dev, :docs]},
+      {:ex_doc,      "~> 0.11", only: [:dev, :docs]},
+      {:inch_ex,     "~> 0.5",  only: [:dev, :docs]}
     ]
+  end
+
+  defp package do
+    %{
+      maintainers: [
+        "Andrew Benz"
+      ],
+      licenses: ["MIT License"],
+      links: %{
+        "GitHub" => "https://github.com/codestuffers/ex-cron"
+      }
+    }
   end
 end
