@@ -2,6 +2,8 @@
 
 Cron schedule generator for Elixir.
 
+[![Hex.pm Version](http://img.shields.io/hexpm/v/ex_cron.svg)](https://hex.pm/packages/ex_cron)
+[![Hex docs](http://img.shields.io/badge/hex.pm-docs-green.svg?style=flat)](https://hexdocs.pm/ex_cron)
 [![Build Status](https://travis-ci.org/codestuffers/ex-cron.png?branch=master)](https://travis-ci.org/codestuffers/ex-cron)
 [![Inline docs](http://inch-ci.org/github/codestuffers/ex-cron.svg?branch=master)](http://inch-ci.org/github/codestuffers/ex-cron)
 

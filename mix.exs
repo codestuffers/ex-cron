@@ -13,7 +13,7 @@ defmodule ExCron.Mixfile do
       deps: deps,
       description: "Cron schedule generator for Elixir.",
       docs: [
-        main: "ExCrom",
+        main: "ExCron",
         source_ref: "v#{@version}",
         source_url: "https://github.com/codestuffers/ex-cron"
       ],
