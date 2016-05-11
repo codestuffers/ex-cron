@@ -65,6 +65,22 @@ defmodule ExCron do
 
   """
   def within(cron_string, start = {{_,_,_},{_,_,_}}, ending = {{_,_,_},{_,_,_}}) do
-    [{{2016,5,10},{22,14,0}},{{2016,5,10},{22,15,0}}]
+    cron = Parser.parse cron_string
+    start_seconds = to_seconds start
+    end_seconds = to_seconds ending
+
+    do_within cron, start_seconds, end_seconds, []
   end
+
+  defp do_within(cron = %Cron{}, seconds, seconds_end, dates) when seconds < seconds_end do
+    date = :calendar.gregorian_seconds_to_datetime seconds
+
+    dates = case is_match cron, date do
+      true -> [date | dates]
+      _ -> dates
+    end
+
+     do_within cron, seconds + 60, seconds_end, dates
+  end
+  defp do_within(_, _, _, dates), do: dates |> Enum.reverse
 end
