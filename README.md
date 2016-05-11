@@ -1,5 +1,10 @@
 # ExCron
 
+Cron schedule generator for Elixir.
+
+[![Build Status](https://travis-ci.org/codestuffers/ex-cron.png?branch=master)](https://travis-ci.org/codestuffers/ex-cron)
+[![Inline docs](http://inch-ci.org/github/codestuffers/ex-cron.svg?branch=master)](http://inch-ci.org/github/codestuffers/ex-cron)
+
 ExCron is a simple library that will generate the next instance of a [cron](https://en.wikipedia.org/wiki/Cron)
 schedule or all instances within a given date range. The design and implementation of the parser and matcher are
 inspired by the [Quantum](https://github.com/c-rack/quantum-elixir) library and episodes 161 and 162 of
