@@ -20,7 +20,7 @@ defmodule ExCron do
 
   """
   def next(cron_string, start = {{_,_,_},{_,_,_}}) do
-    cron = Parser.parse cron_string
+    {:ok, cron} = Parser.parse cron_string
     start_seconds = to_seconds start
 
     do_next cron, start_seconds
@@ -65,7 +65,7 @@ defmodule ExCron do
 
   """
   def within(cron_string, start = {{_,_,_},{_,_,_}}, ending = {{_,_,_},{_,_,_}}) do
-    cron = Parser.parse cron_string
+    {:ok, cron} = Parser.parse cron_string
     start_seconds = to_seconds start
     end_seconds = to_seconds ending
 

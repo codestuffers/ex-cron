@@ -11,19 +11,19 @@ defmodule ExCron.Parser do
 
   ## Example
       iex> ExCron.Parser.parse "0 0 0 0 *"
-      %ExCron.Cron{minutes: [0], hours: [0], days_of_month: [0], months: [0], days_of_week: [0,1,2,3,4,5,6]}
+      {:ok, %ExCron.Cron{minutes: [0], hours: [0], days_of_month: [0], months: [0], days_of_week: [0,1,2,3,4,5,6]}}
 
   """
   def parse(cron) do
     [minutes, hours, days_of_month, months, days_of_week] = String.split cron, " ", parts: 5
 
-    %Cron{
+    {:ok, %Cron{
       minutes: minutes |> parse_piece(0..59),
       hours: hours |> parse_piece(0..23),
       days_of_month: days_of_month |> parse_piece(1..31),
       months: months |> parse_piece(1..12, get_name_mapper(~w(JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC), 1)),
       days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(~w(SUN MON TUE WED THU FRI SAT)))
-    }
+    }}
   end
 
   defp parse_piece(piece, valid_values), do: parse_piece piece, valid_values, &String.to_integer/1
