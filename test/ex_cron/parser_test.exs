@@ -141,4 +141,17 @@ defmodule ExCron.ParserTest do
     assert {:ok, %Cron{days_of_week: [0, 2, 3, 4, 5, 6]}} = ExCron.Parser.parse "* * * * 4-6,0,2-3"
     assert {:ok, %Cron{days_of_week: [0, 2, 3, 4, 5, 6]}} = ExCron.Parser.parse "* * * * THU-SAT,SUN,TUE-WED"
   end
+
+  ### Errors
+  test "returns error when there are not enough sections" do
+    assert {:error, _} = ExCron.Parser.parse "* * *"
+    assert {:error, message} = ExCron.Parser.parse "* * * *"
+    assert message = "not enough sections"
+  end
+
+  test "returns error when there are too many sections" do
+    assert {:error, _} = ExCron.Parser.parse "* * * * * *"
+    assert {:error, message} = ExCron.Parser.parse "* * * * * * *"
+    assert message = "too many sections"
+  end
 end

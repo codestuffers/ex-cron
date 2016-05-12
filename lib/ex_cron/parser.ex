@@ -15,15 +15,18 @@ defmodule ExCron.Parser do
 
   """
   def parse(cron) do
-    [minutes, hours, days_of_month, months, days_of_week] = String.split cron, " ", parts: 5
-
-    {:ok, %Cron{
-      minutes: minutes |> parse_piece(0..59),
-      hours: hours |> parse_piece(0..23),
-      days_of_month: days_of_month |> parse_piece(1..31),
-      months: months |> parse_piece(1..12, get_name_mapper(~w(JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC), 1)),
-      days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(~w(SUN MON TUE WED THU FRI SAT)))
-    }}
+    case String.split cron do
+      [_,_,_,_,_|[_]] -> {:error, "too many sections"}
+      [minutes, hours, days_of_month, months, days_of_week] -> {:ok,
+              %Cron{
+                minutes: minutes |> parse_piece(0..59),
+                hours: hours |> parse_piece(0..23),
+                days_of_month: days_of_month |> parse_piece(1..31),
+                months: months |> parse_piece(1..12, get_name_mapper(~w(JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC), 1)),
+                days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(~w(SUN MON TUE WED THU FRI SAT)))
+              }}
+      _ -> {:error, "not enough sections"}
+    end
   end
 
   defp parse_piece(piece, valid_values), do: parse_piece piece, valid_values, &String.to_integer/1
