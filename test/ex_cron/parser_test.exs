@@ -145,13 +145,11 @@ defmodule ExCron.ParserTest do
   ### Errors
   test "returns error when there are not enough sections" do
     assert {:error, _} = ExCron.Parser.parse "* * *"
-    assert {:error, message} = ExCron.Parser.parse "* * * *"
-    assert message = "not enough sections"
+    assert {:error, "not enough sections; 5 are required"} = ExCron.Parser.parse "* * * *"
   end
 
   test "returns error when there are too many sections" do
     assert {:error, _} = ExCron.Parser.parse "* * * * * *"
-    assert {:error, message} = ExCron.Parser.parse "* * * * * * *"
-    assert message = "too many sections"
+    assert {:error, "too many sections; 5 are required"} = ExCron.Parser.parse "* * * * * * *"
   end
 end

@@ -1,6 +1,9 @@
 defmodule ExCron.Parser do
   alias ExCron.Cron
 
+  @month_names ~w(JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC)
+  @day_names ~w(SUN MON TUE WED THU FRI SAT)
+
   @moduledoc """
   Module that parses a cron string into a representation that can be used
   by code.
@@ -16,16 +19,16 @@ defmodule ExCron.Parser do
   """
   def parse(cron) do
     case String.split cron do
-      [_,_,_,_,_|[_]] -> {:error, "too many sections"}
+      [_,_,_,_,_,_|_] -> {:error, "too many sections; 5 are required"}
       [minutes, hours, days_of_month, months, days_of_week] -> {:ok,
               %Cron{
                 minutes: minutes |> parse_piece(0..59),
                 hours: hours |> parse_piece(0..23),
                 days_of_month: days_of_month |> parse_piece(1..31),
-                months: months |> parse_piece(1..12, get_name_mapper(~w(JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC), 1)),
-                days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(~w(SUN MON TUE WED THU FRI SAT)))
+                months: months |> parse_piece(1..12, get_name_mapper(@month_names, 1)),
+                days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(@day_names))
               }}
-      _ -> {:error, "not enough sections"}
+      _ -> {:error, "not enough sections; 5 are required"}
     end
   end
 
