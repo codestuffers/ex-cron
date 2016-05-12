@@ -152,4 +152,8 @@ defmodule ExCron.ParserTest do
     assert {:error, _} = ExCron.Parser.parse "* * * * * *"
     assert {:error, "too many sections; 5 are required"} = ExCron.Parser.parse "* * * * * * *"
   end
+
+  test "error when minute has invalid character" do
+    assert {:error, _} = ExCron.Parser.parse "X * * * *"
+  end
 end

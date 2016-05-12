@@ -20,19 +20,27 @@ defmodule ExCron.Parser do
   def parse(cron) do
     case String.split cron do
       [_,_,_,_,_,_|_] -> {:error, "too many sections; 5 are required"}
-      [minutes, hours, days_of_month, months, days_of_week] -> {:ok,
-              %Cron{
-                minutes: minutes |> parse_piece(0..59),
-                hours: hours |> parse_piece(0..23),
-                days_of_month: days_of_month |> parse_piece(1..31),
-                months: months |> parse_piece(1..12, get_name_mapper(@month_names, 1)),
-                days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(@day_names))
-              }}
+      [_,_,_,_,_] = parts -> do_parse(parts)
       _ -> {:error, "not enough sections; 5 are required"}
     end
   end
 
-  defp parse_piece(piece, valid_values), do: parse_piece piece, valid_values, &String.to_integer/1
+  defp do_parse([minutes, hours, days_of_month, months, days_of_week]) do
+    result = %Cron{
+      minutes: minutes |> parse_piece(0..59),
+      hours: hours |> parse_piece(0..23),
+      days_of_month: days_of_month |> parse_piece(1..31),
+      months: months |> parse_piece(1..12, get_name_mapper(@month_names, 1)),
+      days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(@day_names))
+    }
+
+    case Enum.any?(result.minutes, &(&1 == :error)) do
+      true -> {:error, "incorrect value"}
+      false -> {:ok, result}
+    end
+  end
+
+  defp parse_piece(piece, valid_values), do: parse_piece piece, valid_values, &Integer.parse/1
   defp parse_piece("*/" <> fractional, valid_values, _mapper) do
     fractional_value = String.to_integer fractional
     valid_values
@@ -49,20 +57,28 @@ defmodule ExCron.Parser do
   end
 
   defp parse_piece_value(value, mapper) do
-    pieces = String.split value, "-"
-    {min_value, max_value} = pieces
-      |> Enum.map(mapper)
-      |> Enum.min_max
-    min_value..max_value
-      |> Enum.to_list
+    do_parse_piece String.split(value, "-"), mapper
+  end
+
+  defp do_parse_piece([min_string, max_string], mapper) do
+    with {min_value, ""} <- mapper.(min_string),
+      {max_value, ""} <- mapper.(max_string),
+      do: min_value..max_value |> Enum.to_list
+  end
+
+  defp do_parse_piece([string_value], mapper) do
+    case mapper.(string_value) do
+      {value, ""} -> value
+      _ -> :error
+    end
   end
 
   defp get_name_mapper(lookup, offset \\ 0) do
     fn x ->
       upcase_x = String.upcase x
       case Enum.find_index(lookup, &(&1 == upcase_x)) do
-        nil -> String.to_integer(x)
-        val -> val + offset
+        nil -> Integer.parse(x)
+        val -> {val + offset, ""}
       end
     end
   end
