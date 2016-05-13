@@ -34,7 +34,15 @@ defmodule ExCron.Parser do
       days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(@day_names))
     }
 
-    case Enum.any?(result.minutes, &(&1 == :error)) do
+    errors = [
+      Enum.any?(result.minutes, &(&1 == :error)),
+      Enum.any?(result.hours, &(&1 == :error)),
+      Enum.any?(result.days_of_month, &(&1 == :error)),
+      Enum.any?(result.months, &(&1 == :error)),
+      Enum.any?(result.days_of_week, &(&1 == :error))
+    ]
+
+    case errors |> Enum.any?(&(&1)) do
       true -> {:error, "incorrect value"}
       false -> {:ok, result}
     end

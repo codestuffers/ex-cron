@@ -156,4 +156,60 @@ defmodule ExCron.ParserTest do
   test "error when minute has invalid character" do
     assert {:error, _} = ExCron.Parser.parse "X * * * *"
   end
+
+  test "error when minute has invalid character in range" do
+    assert {:error, _} = ExCron.Parser.parse "3-X * * * *"
+  end
+
+  test "error when minute has invalid character in multiple" do
+    assert {:error, _} = ExCron.Parser.parse "3,X * * * *"
+  end
+
+  test "error when hour has invalid character" do
+    assert {:error, _} = ExCron.Parser.parse "* X * * *"
+  end
+
+  test "error when hour has invalid character in range" do
+    assert {:error, _} = ExCron.Parser.parse "* 3-X * * *"
+  end
+
+  test "error when hour has invalid character in multiple" do
+    assert {:error, _} = ExCron.Parser.parse "* 3,X * * *"
+  end
+
+  test "error when day_of_month has invalid character" do
+    assert {:error, _} = ExCron.Parser.parse "* * X * *"
+  end
+
+  test "error when day_of_month has invalid character in range" do
+    assert {:error, _} = ExCron.Parser.parse "* * 3-X * *"
+  end
+
+  test "error when day_of_month has invalid character in multiple" do
+    assert {:error, _} = ExCron.Parser.parse "* * 3,X * *"
+  end
+
+  test "error when month has invalid character" do
+    assert {:error, _} = ExCron.Parser.parse "* * * X *"
+  end
+
+  test "error when month has invalid character in range" do
+    assert {:error, _} = ExCron.Parser.parse "* * * 3-X *"
+  end
+
+  test "error when month has invalid character in multiple" do
+    assert {:error, _} = ExCron.Parser.parse "* * * 3,X *"
+  end
+
+  test "error when day_of_week has invalid character" do
+    assert {:error, _} = ExCron.Parser.parse "* * * * X"
+  end
+
+  test "error when day_of_week has invalid character in range" do
+    assert {:error, _} = ExCron.Parser.parse "* * * * 3-X"
+  end
+
+  test "error when day_of_week has invalid character in multiple" do
+    assert {:error, _} = ExCron.Parser.parse "* * * * 3,X"
+  end
 end
