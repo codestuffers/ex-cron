@@ -13,8 +13,8 @@ defmodule ExCron.Parser do
   Parse a cron string into a tuple
 
   ## Example
-      iex> ExCron.Parser.parse "0 0 0 0 *"
-      {:ok, %ExCron.Cron{minutes: [0], hours: [0], days_of_month: [0], months: [0], days_of_week: [0,1,2,3,4,5,6]}}
+      iex> ExCron.Parser.parse "0 0 1 1 *"
+      {:ok, %ExCron.Cron{minutes: [0], hours: [0], days_of_month: [1], months: [1], days_of_week: [0,1,2,3,4,5,6]}}
 
   """
   def parse(cron) do
@@ -35,14 +35,17 @@ defmodule ExCron.Parser do
     }
 
     errors = [result.minutes, result.hours, result.days_of_month, result.months, result.days_of_week]
-      |> List.flatten
-      |> Enum.any?(&(&1 == :error))
+      |> Enum.map(&has_error/1)
+      |> Enum.reduce(false, fn (x, y) -> x || y end)
 
     case errors do
       true -> {:error, "incorrect value"}
       _ -> {:ok, result}
     end
   end
+
+  defp has_error([]), do: true
+  defp has_error(list), do: Enum.any? list, &(&1 == :error)
 
   defp parse_piece(piece, valid_values), do: parse_piece piece, valid_values, &Integer.parse/1
   defp parse_piece("*/" <> fractional, valid_values, _mapper) do
@@ -52,13 +55,17 @@ defmodule ExCron.Parser do
       |> Enum.to_list
   end
   defp parse_piece("*", valid_values, _mapper), do: valid_values |> Enum.to_list
-  defp parse_piece(value, _valid_values, mapper) do
+  defp parse_piece(value, valid_values, mapper) do
     pieces = String.split value, ","
     pieces
       |> Enum.map(&(parse_piece_value(&1, mapper)))
       |> List.flatten
+      |> Enum.filter(&(is_valid_section_value(&1, valid_values)))
       |> Enum.sort
   end
+
+  defp is_valid_section_value(:error, _valid_values), do: true
+  defp is_valid_section_value(value, valid_values), do: valid_values |> Enum.any?(&(value == &1))
 
   defp parse_piece_value(value, mapper) do
     do_parse_piece String.split(value, "-"), mapper
@@ -76,6 +83,8 @@ defmodule ExCron.Parser do
       _ -> :error
     end
   end
+
+  defp do_parse_piece(_, _mapper), do: :error
 
   defp get_name_mapper(lookup, offset \\ 0) do
     fn x ->

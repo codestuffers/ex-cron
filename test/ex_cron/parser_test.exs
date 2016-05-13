@@ -29,6 +29,10 @@ defmodule ExCron.ParserTest do
     assert {:ok, %Cron{minutes: [6,10,11,12,15,16]}} = ExCron.Parser.parse "10-12,6,15-16 * * * *"
   end
 
+  test "filter out invalid values" do
+    assert {:ok, %Cron{minutes: [5]}} = ExCron.Parser.parse "5,60 * * * *"
+  end
+
   ### Hour tests
   test "parse single hour" do
     assert {:ok, %Cron{hours: [7]}} = ExCron.Parser.parse "* 7 * * *"
@@ -161,6 +165,10 @@ defmodule ExCron.ParserTest do
     assert {:error, _} = ExCron.Parser.parse "3-X * * * *"
   end
 
+  test "error when minute has too many range items" do
+    assert {:error, _} = ExCron.Parser.parse "3-6-9 * * * *"
+  end
+
   test "error when minute has invalid character in multiple" do
     assert {:error, _} = ExCron.Parser.parse "3,X * * * *"
   end
@@ -171,6 +179,10 @@ defmodule ExCron.ParserTest do
 
   test "error when hour has invalid character in range" do
     assert {:error, _} = ExCron.Parser.parse "* 3-X * * *"
+  end
+
+  test "error when hour has too many range items" do
+    assert {:error, _} = ExCron.Parser.parse "* 3-6-9 * * *"
   end
 
   test "error when hour has invalid character in multiple" do
@@ -185,6 +197,10 @@ defmodule ExCron.ParserTest do
     assert {:error, _} = ExCron.Parser.parse "* * 3-X * *"
   end
 
+  test "error when day_of_month has too many range items" do
+    assert {:error, _} = ExCron.Parser.parse "* * 3-6-9 * *"
+  end
+
   test "error when day_of_month has invalid character in multiple" do
     assert {:error, _} = ExCron.Parser.parse "* * 3,X * *"
   end
@@ -197,8 +213,16 @@ defmodule ExCron.ParserTest do
     assert {:error, _} = ExCron.Parser.parse "* * * 3-X *"
   end
 
+  test "error when month has too many range items" do
+    assert {:error, _} = ExCron.Parser.parse "* * * 3-6-9 *"
+  end
+
   test "error when month has invalid character in multiple" do
     assert {:error, _} = ExCron.Parser.parse "* * * 3,X *"
+  end
+
+  test "error when day_of_week has only invalid value" do
+    assert {:error, _} = ExCron.Parser.parse "* * * * 12"
   end
 
   test "error when day_of_week has invalid character" do
@@ -207,6 +231,10 @@ defmodule ExCron.ParserTest do
 
   test "error when day_of_week has invalid character in range" do
     assert {:error, _} = ExCron.Parser.parse "* * * * 3-X"
+  end
+
+  test "error when day_of_week has too many range items" do
+    assert {:error, _} = ExCron.Parser.parse "* * * * 1-3-6"
   end
 
   test "error when day_of_week has invalid character in multiple" do
