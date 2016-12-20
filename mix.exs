@@ -41,9 +41,9 @@ defmodule ExCron.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:credo,       "~> 0.3",  only: [:dev, :test]},
-      {:earmark,     "~> 0.2",  only: [:dev, :docs]},
-      {:ex_doc,      "~> 0.11", only: [:dev, :docs]},
+      {:credo,       "~> 0.5",  only: [:dev, :test]},
+      {:earmark,     "~> 1.0",  only: [:dev, :docs]},
+      {:ex_doc,      "~> 0.14", only: [:dev, :docs]},
       {:inch_ex,     "~> 0.5",  only: [:dev, :docs]}
     ]
   end
