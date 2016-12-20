@@ -31,7 +31,11 @@ defmodule ExCron.Parser do
       hours: hours |> parse_piece(0..23),
       days_of_month: days_of_month |> parse_piece(1..31),
       months: months |> parse_piece(1..12, get_name_mapper(@month_names, 1)),
-      days_of_week: days_of_week |> parse_piece(0..6, get_name_mapper(@day_names))
+      days_of_week: days_of_week
+        |> parse_piece(0..7, get_name_mapper(@day_names))
+        |> Enum.map(&map_sunday/1)
+        |> Enum.uniq
+        |> Enum.sort
     }
 
     errors = [result.minutes, result.hours, result.days_of_month, result.months, result.days_of_week]
@@ -43,6 +47,9 @@ defmodule ExCron.Parser do
       _ -> {:ok, result}
     end
   end
+
+  defp map_sunday(7), do: 0
+  defp map_sunday(x), do: x
 
   defp has_error([]), do: true
   defp has_error(list), do: Enum.any? list, &(&1 == :error)
