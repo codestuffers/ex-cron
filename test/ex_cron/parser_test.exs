@@ -122,6 +122,12 @@ defmodule ExCron.ParserTest do
     assert {:ok, %Cron{days_of_week: [4]}} = ExCron.Parser.parse "* * * * thu"
   end
 
+  test "parse sunday as 0 or 7" do
+    assert {:ok, %Cron{days_of_week: [0]}} = ExCron.Parser.parse "* * * * 0"
+    assert {:ok, %Cron{days_of_week: [0]}} = ExCron.Parser.parse "* * * * 7"
+    assert {:ok, %Cron{days_of_week: [0]}} = ExCron.Parser.parse "* * * * SUN"
+  end
+
   test "parse multiple days of week" do
     assert {:ok, %Cron{days_of_week: [3, 6]}} = ExCron.Parser.parse "* * * * 6,3"
     assert {:ok, %Cron{days_of_week: [3, 6]}} = ExCron.Parser.parse "* * * * SAT,WED"
