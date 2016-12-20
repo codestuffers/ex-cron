@@ -43,7 +43,8 @@ defmodule ExCron do
   end
 
   defp is_match(cron = %Cron{}, {{year, month, day},{hour, minute, _}}) do
-    day_of_week = :calendar.day_of_the_week(year, month, day)
+    # Convert 1..7 - Monday..Sunday, to 0..6 - Sunday..Saturday
+    day_of_week = rem(:calendar.day_of_the_week(year, month, day), 7)
 
     matches = [
       cron.minutes |> Enum.any?(&(&1 == minute)),

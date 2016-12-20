@@ -17,6 +17,6 @@ defmodule ExCronTest do
 
   test "within gets a large number of results" do
     dates = ExCron.within "* * * * *", {{2016,5,10},{23,9,0}}, {{2016,10,8},{6,30,12}}
-    assert Enum.count(dates) == 186202
+    assert Enum.count(dates) == 216442
   end
 end
